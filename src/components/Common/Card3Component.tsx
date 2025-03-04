@@ -4,8 +4,6 @@ import { forwardRef } from "react";
 import IconButtonComponent from "./IconButtonComponent";
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
-import zIndex from "@mui/material/styles/zIndex";
-
 interface SectionCardProps {
     movie: MovieItemGenre;
     handleClicked?: (slug: string) => void;

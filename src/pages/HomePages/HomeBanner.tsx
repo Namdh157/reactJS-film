@@ -32,7 +32,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
     return (
         <>
             <Box className="absolute top-0 bottom-0 right-0 left-0 ">
-                {/* <TrailerYoutube url={data?.trailer_url || ''} isPlaying={isPlaying} onVideoEnd={displayBtReplay} onVideoPlaying={handlePlaying} /> */}
+                <TrailerYoutube url={data?.trailer_url || ''} isPlaying={isPlaying} onVideoEnd={displayBtReplay} onVideoPlaying={handlePlaying} />
                 <img src={data?.thumb_url} className='w-full h-full object-cover' alt="Banner image" />
             </Box>
             <Box className="absolute top-0 bottom-0 right-0 left-0 bg-gradient-to-t from-[#111111] from-0% to-transparent to-30%" />

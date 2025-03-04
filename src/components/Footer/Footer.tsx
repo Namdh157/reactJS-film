@@ -1,7 +1,7 @@
 import imgApple from "../../assets/img/Apple.png";
 import imgGoogle from "../../assets/img/Google.png";
 import fptLogo from "../../assets/img/FPT_Polytechnic.png"
-import { Box, Button, Divider, Grid2, IconButton, styled, Typography } from "@mui/material";
+import { Box, Button, Grid2, IconButton, styled, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import { Instagram, Twitter } from "@mui/icons-material";
