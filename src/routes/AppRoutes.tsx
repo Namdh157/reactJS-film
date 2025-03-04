@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout'
 import HomePage from '../pages/HomePages/HomePage'
 import TestComponent from '../components/Common/TestComponent'
 import Error from '../pages/ErorrPage/Error'
+import NotFound from '../pages/ErorrPage/NotFound'
 
 const AppRoutes = () => {
     return (
@@ -15,7 +16,7 @@ const AppRoutes = () => {
                 <Route index element={<TestComponent />} />
             </Route>
             <Route path='/error-timeout' element={<Error />} />
-            <Route path='*' element={<h1>Not Found</h1>} />
+            <Route path='*' element={<NotFound />} />
         </Routes>
     )
 }
