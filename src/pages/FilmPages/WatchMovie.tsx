@@ -9,7 +9,7 @@ import { MovieDetail } from '../../Types/movieTypes'
 import { getMovieDetail } from '../../services/movieService'
 import { useParams, useSearchParams } from 'react-router'
 import ReactPlayer from "react-player";
-import { Button, colors, Typography } from '@mui/material';
+import { Button,Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../store/loadingSlice';
