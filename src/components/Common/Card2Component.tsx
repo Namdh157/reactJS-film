@@ -11,8 +11,6 @@ interface SectionCardProps {
 }
 
 const Card2Component = forwardRef<HTMLDivElement, SectionCardProps>(({ movie, handleClicked }, ref) => {
-    console.log(movie);
-
     return (
         <Card
             sx={{

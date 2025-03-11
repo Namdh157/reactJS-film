@@ -11,7 +11,6 @@ type InfinityScrollProps = {
 
 const InfinityScroll = ({ children, fetchMore, hasMore, loader, className, endMessage }: InfinityScrollProps) => {
     const pageEndRef = useRef(null);
-    console.log(hasMore);
 
     useEffect(() => {
         if (hasMore) {
@@ -38,8 +37,8 @@ const InfinityScroll = ({ children, fetchMore, hasMore, loader, className, endMe
     return (
         <div className={className}>
             {children}
-            {loader}
-            {hasMore ? <div ref={pageEndRef}></div> : endMessage}
+
+            {hasMore ? <div ref={pageEndRef}>{loader}</div> : endMessage}
         </div>
     )
 }

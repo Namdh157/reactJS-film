@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { convertYouTubeUrl } from '../../utils/convertYoutubeUrl';
+import { toast } from 'react-toastify';
 
 declare global {
     interface Window {
@@ -17,69 +18,93 @@ type TrailerYoutubeProps = {
     onVideoPlaying?: () => void;
 }
 
-const TrailerYoutube = ({ url, autoPlay = true, hidden = true, isPlaying, onVideoEnd, onVideoPlaying }: TrailerYoutubeProps) => {
+const TrailerYoutube = ({ url, autoPlay = true, hidden = true, onVideoEnd, onVideoPlaying }: TrailerYoutubeProps) => {
     if (!url) return null;
+
     const playerRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    console.log(hidden);
+    const [error, setError] = useState<string | null>(null);
+
+
+    if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+    }
 
     useEffect(() => {
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        document.body.appendChild(tag);
-        window.onYouTubeIframeAPIReady = () => {
-            playerRef.current = new window.YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                zIndex: '3',
-                videoId: convertYouTubeUrl(url),
-                playerVars: {
-                    autoplay: autoPlay ? 1 : 0,
-                    controls: 0,
-                    modestbranding: 1,
-                    rel: 0,
-                    showinfo: 0,
-                    fs: 0,
-                    mute: 1
-                },
-                events: {
-                    onStateChange: (event: any) => {
-                        if (event.data === window.YT.PlayerState.ENDED) {
-                            onVideoEnd && onVideoEnd();
-                        } else if (event.data === window.YT.PlayerState.PLAYING) {
-                            onVideoPlaying && onVideoPlaying();
-                        }
-                    }
-                }
-            });
+        if (error !== null) {
+            toast.error(error);
+        }
+    }, [error])
+
+    useEffect(() => {
+        const existingScript = document.querySelector("script[src='https://www.youtube.com/iframe_api']");
+
+        if (!existingScript) {
+            const tag = document.createElement("script");
+            tag.src = "https://www.youtube.com/iframe_api";
+            document.body.appendChild(tag);
+        }
+
+        const createPlayer = () => {
+            if (!playerRef.current) {
+                playerRef.current = new window.YT.Player("player", {
+                    height: "100%",
+                    width: "100%",
+                    videoId: convertYouTubeUrl(url),
+                    playerVars: {
+                        autoplay: autoPlay ? 1 : 0,
+                        controls: 0,
+                        modestbranding: 1,
+                        rel: 0,
+                        showinfo: 0,
+                        fs: 0,
+                        mute: 1,
+                    },
+                    events: {
+                        onStateChange: (event: any) => {
+                            if (event.data === window.YT.PlayerState.ENDED) {
+                                onVideoEnd && onVideoEnd();
+                            } else if (event.data === window.YT.PlayerState.PLAYING) {
+                                onVideoPlaying && onVideoPlaying();
+                            }
+                        },
+                        onError: (event: any) => {
+
+                            console.error("Lỗi video:", event.data);
+                            if (event.data === 100) {
+                                setError("Trailer không tồn tại.");
+                            } else if (event.data === 101 || event.data === 150) {
+                                setError("Trailer đã bị xóa hoặc bị cấm.");
+                            } else {
+                                setError("Trailer có lỗi xảy ra")
+                            }
+                        },
+                    },
+                });
+            }
         };
+        if (window.YT && window.YT.Player) {
+            createPlayer();
+        } else {
+            window.onYouTubeIframeAPIReady = createPlayer;
+        }
 
         return () => {
             if (playerRef.current) {
                 playerRef.current.destroy();
+                playerRef.current = null;
             }
         }
-    }, []);
+    }, [hidden]);
 
-    useEffect(() => {
-        if (playerRef.current) {
-            if (containerRef.current) containerRef.current.style.display = 'block';
-
-            playerRef.current.seekTo(0);
-            playerRef.current.playVideo();
-        }
-
-        return () => {
-            if (playerRef.current) {
-                playerRef.current.stopVideo();
-            }
-        }
-    }, [isPlaying]);
 
     return (
-        <div ref={containerRef} className={`${hidden ? 'hidden' : ''} w-full h-full absolute top-0 left-0`}>
-            <div id="player" style={{ width: '100%', height: '100%' }} />
-        </div>
+        <>
+            {!hidden && <div ref={containerRef} className=' w-full h-full absolute top-0 left-0'>
+                <div id="player" style={{ width: '100%', height: '100%' }} />
+            </div>}
+        </>
     );
 };
 

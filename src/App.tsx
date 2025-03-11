@@ -3,6 +3,7 @@ import AppRoutes from './routes/AppRoutes'
 import { useEffect } from 'react';
 import { getGenres } from './services/genreService';
 import { AppDispatch } from './store/store';
+import FullPageLoader from './components/Common/FullPageLoader';
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,7 +14,7 @@ const App = () => {
   return (
     <>
       <AppRoutes />
-      {/* <FullPageLoader/> */}
+      <FullPageLoader/>
     </>
   )
 }

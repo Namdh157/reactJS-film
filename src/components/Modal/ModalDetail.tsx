@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Modal,styled, Typography } from "@mui/material";
+import { Box, Button, IconButton, Modal, styled, Typography } from "@mui/material";
 import { MovieDetail } from "../../Types/movieTypes"
 import { useEffect, useState } from "react";
 import { getMovieDetail } from "../../services/movieService";
@@ -96,7 +96,7 @@ function ModalDetail() {
                                 <Box className="max-h-10/12 px-4 mt-5 overflow-y-auto"
                                     sx={{ '&::-webkit-scrollbar': { display: '1px solid red' }, transition: 'all 0.5s ease-in-out' }}
                                 >
-                                    {movie?.episodes?.map((server) => (
+                                    {movie?.episodes?.map((server, indexServer) => (
                                         <Box key={server.server_name} className="flex flex-col gap-2 mb-5 items-start h-full">
                                             <Typography variant="h6"
                                                 variantMapping={{ h5: 'span' }}
@@ -109,7 +109,11 @@ function ModalDetail() {
                                                         key={data.slug}
                                                         variant="contained"
                                                         sx={{ background: '#23252b', color: 'white', padding: '5px', textAlign: 'left' }}
-                                                        children={<Link to={`/phim/xem-phim/${movie.movie.slug}/${data.slug}`} children={data.name} />}
+                                                        children={
+                                                            <Link
+                                                                to={`/phim/xem-phim/${movie.movie.slug}?sv=${indexServer}&ep=${data.slug}`}
+                                                                children={data.name}
+                                                            />}
                                                     />
                                                 ))}
                                             </Box>
