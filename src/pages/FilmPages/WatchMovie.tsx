@@ -17,11 +17,11 @@ import { setLoading } from '../../store/loadingSlice';
 const WatchMovie = () => {
     const dispatch = useDispatch();
     const [movie, setMovie] = useState<MovieDetail | null>(null)
-    const [srcMovie, setSrcMovie] = useState<{ link_m3u8: string }>({ link_m3u8: "" })
+    const [srcMovie, setSrcMovie] = useState<{ link_m3u8: string }>({ link_m3u8: "" });
     const { name } = useParams();
     const [searchParams] = useSearchParams();
-    const serverIndex = searchParams.get("sv"); // "0"
-    const episodePram = searchParams.get("ep"); // "full"
+    const serverIndex = searchParams.get("sv"); 
+    const episodePram = searchParams.get("ep"); 
 
     console.log(srcMovie);
 

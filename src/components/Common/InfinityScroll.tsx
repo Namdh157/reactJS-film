@@ -22,12 +22,13 @@ const InfinityScroll = ({ children, fetchMore, hasMore, loader, className, endMe
                 }
             })
 
-            if (pageEndRef.current) {
-                observer.observe(pageEndRef.current);
+            const currentRef = pageEndRef.current;
+            if (currentRef) {
+                observer.observe(currentRef);
             }
             return () => {
-                if (pageEndRef.current) {
-                    observer.unobserve(pageEndRef.current);
+                if (currentRef) {
+                    observer.unobserve(currentRef);
                 }
             }
         }

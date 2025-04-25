@@ -139,7 +139,7 @@ interface Movie {
 interface MoviesResponse {
     status: boolean;
     items: [];
-    pagination?: Object;
+    pagination?: object;
 }
 
 export type { MovieParams, MovieItemGenre, MovieDetail, Movie, MoviesResponse };

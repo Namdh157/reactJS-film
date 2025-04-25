@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MovieItemGenre } from "../../Types/movieTypes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { GenresParams } from "../../Types/genreTypes";
 import { getMovieForGenre } from "../../services/movieService";
@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import InfinityScroll from "../../components/Common/InfinityScroll";
 import MovieCarousel from "./MovieCarousel";
 import CarouselSkeleton from "../../components/Skeleton/CarouselSkeleton";
-
+import { setShowFooter } from "../../store/showFooterSlice";
 interface MovieContainer {
   genre: string;
   movies: MovieItemGenre[];
@@ -18,10 +18,17 @@ const ContainerCarousel = () => {
   const [containerMovies, setContainerMovies] = useState<MovieContainer[]>([]);
   const indexGenresRef = useRef(0);
   const [page, setPage] = useState(1);
-  const genres = useSelector((state: RootState) => state.genres.genres);
+  const genres = useSelector((state: RootState) => state.genres.genres).slice(0, 5);
+  const dispatch = useDispatch();
 
-  const handleScroll = async () => {
-    if (indexGenresRef.current >= genres.length) return;
+
+  const handleScroll = useCallback(async () => {
+    
+    if (indexGenresRef.current > genres.length - 2) {
+      console.log("end");
+      dispatch(setShowFooter(true));
+      return;
+    };
     const params: GenresParams = {
       type_list: genres[indexGenresRef.current].slug,
       limit: 16,
@@ -39,10 +46,10 @@ const ContainerCarousel = () => {
         movies: response.data.items
       }]);
       indexGenresRef.current += 1;
-    } catch (error) {
+    } catch {
       toast.error("Lấy danh sách phim thất bại");
     }
-  }
+  }, [dispatch, genres]);
 
   useEffect(() => {
     handleScroll();

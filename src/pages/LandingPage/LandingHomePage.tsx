@@ -14,7 +14,7 @@ const LandingHomePage = () => {
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
         <div className="bg-gray-900 bg-opacity-80 p-10 rounded-lg shadow-lg">
           <h1 className="text-white text-4xl font-bold flex items-center space-x-2">
-            <Typography component="span" sx={{ color: 'primary.main', fontSize: '2.25rem', fontWeight: 'bold', marginRight: '.2rem' }}>FPT</Typography>Phim
+            <Typography component="span" sx={{ color: 'primary.main', fontSize: '2.25rem', fontWeight: 'bold', marginRight: '.2rem' }}>South_Dang</Typography>Phim
           </h1>
           <p className="text-gray-300 mt-4 text-lg">
             Xem Phim Miễn Phí Cực Nhanh, Chất Lượng Cao
