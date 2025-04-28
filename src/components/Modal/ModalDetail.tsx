@@ -113,6 +113,7 @@ function ModalDetail() {
                                                             <Link
                                                                 to={`/phim/xem-phim/${movie.movie.slug}?sv=${indexServer}&ep=${data.slug}`}
                                                                 children={data.name}
+                                                                onClick={handleClose}
                                                             />}
                                                     />
                                                 ))}

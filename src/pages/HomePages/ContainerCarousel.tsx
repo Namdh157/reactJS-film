@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MovieItemGenre } from "../../Types/movieTypes";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { GenresParams } from "../../Types/genreTypes";
 import { getMovieForGenre } from "../../services/movieService";
@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import InfinityScroll from "../../components/Common/InfinityScroll";
 import MovieCarousel from "./MovieCarousel";
 import CarouselSkeleton from "../../components/Skeleton/CarouselSkeleton";
-import { setShowFooter } from "../../store/showFooterSlice";
 interface MovieContainer {
   genre: string;
   movies: MovieItemGenre[];
@@ -18,17 +17,11 @@ const ContainerCarousel = () => {
   const [containerMovies, setContainerMovies] = useState<MovieContainer[]>([]);
   const indexGenresRef = useRef(0);
   const [page, setPage] = useState(1);
-  const genres = useSelector((state: RootState) => state.genres.genres).slice(0, 5);
-  const dispatch = useDispatch();
+  const genres = useSelector((state: RootState) => state.genres.genres);
 
 
   const handleScroll = useCallback(async () => {
     
-    if (indexGenresRef.current > genres.length - 2) {
-      console.log("end");
-      dispatch(setShowFooter(true));
-      return;
-    };
     const params: GenresParams = {
       type_list: genres[indexGenresRef.current].slug,
       limit: 16,
@@ -49,25 +42,18 @@ const ContainerCarousel = () => {
     } catch {
       toast.error("Lấy danh sách phim thất bại");
     }
-  }, [dispatch, genres]);
+  }, [genres]);
 
   useEffect(() => {
     handleScroll();
-  }, [page]);
+  }, [page]);  
 
   return (
     <InfinityScroll
-      hasMore={indexGenresRef.current < genres.length}
+      hasMore={indexGenresRef.current <= genres.length - 2}
       loader={<CarouselSkeleton />}
       className="container-carousel"
       fetchMore={() => setPage(prev => prev + 1)}
-      endMessage={
-        <>
-          <p style={{ textAlign: 'center' }}>
-            <b>Yay! You have seen it all</b>
-          </p>
-        </>
-      }
     >
 
       {containerMovies.map((carousel, index) => (
