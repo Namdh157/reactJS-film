@@ -21,24 +21,36 @@ const ContainerCarousel = () => {
 
 
   const handleScroll = useCallback(async () => {
-    
-    const params: GenresParams = {
-      type_list: genres[indexGenresRef.current].slug,
-      limit: 16,
-    }
+    const index = indexGenresRef.current;
+
+    const genreParamsList = [0,1]
+    .map(i => genres[index + i])
+    .filter(Boolean)
+    .map(genre => ({
+      type_list: genre.slug,
+      limit: 16
+    }));
+
+    if (genreParamsList.length === 0) return;
 
     try {
-      const response = await getMovieForGenre(params);
-      if (response.data.items.length === 0) {
-        indexGenresRef.current += 1;
-        handleScroll();
-        return;
+      const responses = await Promise.all(
+        genreParamsList.map(params => getMovieForGenre(params))
+      );
+      const newData: MovieContainer[] = responses.map((response, i) => {
+        if (response.data.items.length === 0) return null;
+  
+        return {
+          genre: genres[index + i].name,
+          movies: response.data.items
+        };
+      }).filter((item): item is MovieContainer => item !== null);
+  
+      if (newData.length > 0) {
+        setContainerMovies(prev => [...prev, ...newData]);
       }
-      setContainerMovies((prev) => [...prev, {
-        genre: genres[indexGenresRef.current - 1].name,
-        movies: response.data.items
-      }]);
-      indexGenresRef.current += 1;
+  
+      indexGenresRef.current += genreParamsList.length;
     } catch {
       toast.error("Lấy danh sách phim thất bại");
     }
