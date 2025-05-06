@@ -42,7 +42,6 @@ const Footer: React.FC = () => {
   const showFooter = useSelector(
     (state: RootState) => state.showFooter.showFooter
   );
-  console.log(showFooter);
   if (!showFooter) return null;
   return (
     <>

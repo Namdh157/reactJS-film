@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MovieItemGenre } from "../../Types/movieTypes";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { GenresParams } from "../../Types/genreTypes";
 import { getMovieForGenre } from "../../services/movieService";
 import { toast } from "react-toastify";
 import InfinityScroll from "../../components/Common/InfinityScroll";

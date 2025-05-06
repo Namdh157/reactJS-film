@@ -23,7 +23,7 @@ const theme = createTheme({
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     fontSize: 12,
   }
-})
+})  
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
