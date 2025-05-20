@@ -45,7 +45,7 @@ const GenrePage = () => {
 
       <FilterComponent />
 
-      <ContainerGenre data={data} />
+      {/* <ContainerGenre data={data} /> */}
     </>
   );
 };
