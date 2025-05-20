@@ -4,7 +4,7 @@ import { getGenresDetail } from "../../services/genreService";
 import { toast } from "react-toastify";
 import { GenreList } from "../../Types/genreTypes";
 import { Typography } from "@mui/material";
-import ContainerGenre from "./ContainerGenre";
+// import ContainerGenre from "./ContainerGenre";
 import FilterComponent from "../../components/Common/FilterComponent";
 
 const GenrePage = () => {
