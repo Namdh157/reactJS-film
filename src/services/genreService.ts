@@ -18,6 +18,8 @@ const getGenresDetail = async (params: GenresParams) => {
         const filteredParams = Object.fromEntries(
             Object.entries(queryParams).filter(([__, value]) => value !== undefined)
         );
+        console.log(filteredParams);
+        
         const response = await axiosInstance.get(`/v1/api/the-loai/${type_list}`, {
             params: filteredParams,
         });
