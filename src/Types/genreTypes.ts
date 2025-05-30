@@ -1,3 +1,5 @@
+import { Movie } from "./movieTypes";
+
 interface GenresParams {
   type_list: string;
   page?: number;
@@ -15,7 +17,7 @@ interface Genre {
   slug: string;
 }
 
-interface ItemGenre {
+interface ItemGenre extends Movie {
   modified: object;
   _id: string;
   name: string;
@@ -38,9 +40,25 @@ interface GenreList {
   breadCrumb: [];
   titlePage: string;
   items: ItemGenre[];
-  params: object;
+  params: paramsGenreList;
   type_list: string;
   APP_DOMAIN_FRONTEND: string;
   APP_DOMAIN_CDN_IMAGE: string;
 }
-export type { GenresParams, Genre, ItemGenre, GenreList };
+interface paramsGenreList {
+  filterCategory: Array<string>;
+  filterCountry: Array<string>;
+  filterType : Array<string>;
+  filterYear: Array<string>;
+  pagination: {
+    currentPage: number;
+    totalItems: number;
+    totalItemsPerPage: number;
+    totalPages: number;
+  }
+  slug: string;
+  sortField: string;
+  sortType: string;
+  type_slug: string;
+}
+export type { GenresParams, Genre, ItemGenre, GenreList, paramsGenreList };

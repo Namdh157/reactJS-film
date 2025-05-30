@@ -4,7 +4,6 @@ import { Movie } from '../../Types/movieTypes';
 import { getMovieDetail, getMovies } from '../../services/movieService';
 import HomeBanner from './HomeBanner';
 import MovieCarousel from './MovieCarousel';
-import ModalDetail from '../../components/Modal/ModalDetail';
 import HomeSkeleton from '../../components/Skeleton/HomeSkeleton';
 import { toast } from 'react-toastify';
 import ContainerCarousel from './ContainerCarousel';
@@ -65,7 +64,6 @@ const HomePage: React.FC = () => {
               <MovieCarousel title="mới cập nhật" movies={movies} />
               <ContainerCarousel />
             </Container>
-            <ModalDetail />
           </Box>
         </>
       }
