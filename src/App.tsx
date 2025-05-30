@@ -5,6 +5,7 @@ import { getGenres } from "./services/genreService";
 import { AppDispatch } from "./store/store";
 import FullPageLoader from "./components/Common/FullPageLoader";
 import { getCountries } from "./services/countryService";
+import ModalDetail from "./components/Modal/ModalDetail";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +18,7 @@ const App = () => {
     <>
       <AppRoutes />
       <FullPageLoader />
+      <ModalDetail />
     </>
   );
 };

@@ -1,24 +1,32 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import { getGenresDetail } from "../../services/genreService";
 import { toast } from "react-toastify";
 import { GenreList } from "../../Types/genreTypes";
-import { Typography } from "@mui/material";
-// import ContainerGenre from "./ContainerGenre";
+import { Breadcrumbs, Typography, Link } from "@mui/material";
+import ContainerGenre from "./ContainerGenre";
 import FilterComponent from "../../components/Common/FilterComponent";
+import GenrePageSketon from "../../components/Skeleton/GenrePageSketon";
+import { useParams } from "react-router";
 
 const GenrePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [data, setData] = useState<GenreList>({} as GenreList);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    setPage(1);
+  }, [slug]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!slug) return;
-      const params = {
+      const paramsQuery = {
         type_list: slug,
         limit: 32,
+        page: page,
       };
       try {
-        const response = await getGenresDetail(params);
+        const response = await getGenresDetail(paramsQuery);
         setData(response.data);
       } catch (error) {
         console.error("Lấy danh sách phim thất bại", error);
@@ -30,9 +38,7 @@ const GenrePage = () => {
     return () => {
       setData({} as GenreList);
     };
-  }, [slug]);
-
-  console.log(data);
+  }, [slug, page]);
 
   return (
     <>
@@ -40,12 +46,35 @@ const GenrePage = () => {
         variant="h4"
         sx={{ color: "common.white", fontWeight: "bold", mb: 2 }}
       >
-        {data.titlePage}
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          sx={{
+            "& .MuiBreadcrumbs-separator": {
+              color: "common.white",
+            },
+          }}
+        >
+          <Link underline="hover" color="common.white" href="/trang-chu">
+            Trang chủ
+          </Link>
+          <Link
+            underline="hover"
+            color="common.white"
+            href="/the-loai"
+          >
+            Thể loại
+          </Link>
+          <Typography sx={{ color: 'common.white' }}>{data.titlePage}</Typography>
+        </Breadcrumbs>
       </Typography>
 
       <FilterComponent />
 
-      {/* <ContainerGenre data={data} /> */}
+      {!data?.items ? (
+        <GenrePageSketon />
+      ) : (
+        <ContainerGenre data={data} page={page} onPageChange={setPage} />
+      )}
     </>
   );
 };
