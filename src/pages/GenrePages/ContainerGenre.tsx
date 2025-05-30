@@ -4,6 +4,7 @@ import { GenreList } from "../../Types/genreTypes";
 import { openModal } from "../../store/modalSlice";
 import { useRef } from "react";
 import { Pagination } from "@mui/material";
+import { PaginationProps } from '@mui/material';
 
 const ContainerGenre: React.FC<{ data: GenreList; page: number; onPageChange: (page: number) => void; }> = ({ data, page, onPageChange }) => {
 
@@ -11,7 +12,7 @@ const ContainerGenre: React.FC<{ data: GenreList; page: number; onPageChange: (p
   const cardRef = useRef<HTMLDivElement>(null);
   const paginateRef = useRef<HTMLDivElement>(null);
 
-  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChangePage: PaginationProps['onChange'] = (_, value: number) => {
     if (value === page) return;
     
     onPageChange(value);
