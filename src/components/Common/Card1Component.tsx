@@ -35,7 +35,21 @@ const Card1Component = forwardRef<HTMLDivElement, SectionCardProps>(({ movie, ha
             </CardMedia>
 
             <CardContent>
-                <Typography sx={{ width: '100%', fontSize: '14px', fontWeight: 'bold', color: 'primary.contrastText' }} children={movie.name} />
+                <Typography
+                    sx={{
+                        width: '100%',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        color: 'primary.contrastText',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'normal',
+                    }}
+                    children={movie.name}
+                />
             </CardContent>
         </Card>
     )

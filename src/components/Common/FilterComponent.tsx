@@ -113,21 +113,10 @@ const FilterComponent = () => {
   const [showAllYears, setShowAllYears] = useState<boolean>(false);
   const [data, setData] = useState<GenreList>({} as GenreList);
 
-
   useEffect(() => {
-    const fetchData = async () => {
-      const params = {
-        type_list: genres[0]?.slug,
-        limit: 100,
-      };
-      const response = await getGenresDetail(params);
-      setData(response);
-
-    }
-    fetchData();
+   
 
   }, []);
-console.log("data", data);
 
   const handleToggleValue = (group: string, value: string) => {
     dispatch({ type: "TOGGLE_VALUE", group, value });
@@ -152,7 +141,7 @@ console.log("data", data);
 
 
   return (
-    <>
+    <div className="my-6">
       {/* bộ lọc */}
       <Box
         className="flex items-start gap-2 my-6 cursor-pointer"
@@ -413,7 +402,7 @@ console.log("data", data);
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
