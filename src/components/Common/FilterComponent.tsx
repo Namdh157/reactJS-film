@@ -4,8 +4,6 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useEffect, useReducer, useState } from "react";
-import { GenreList } from "../../Types/genreTypes";
-import { getGenresDetail } from "../../services/genreService";
 
 const types = [
   {
@@ -111,7 +109,6 @@ const FilterComponent = () => {
   const [filterState, dispatch] = useReducer(filterReducer, {});
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [showAllYears, setShowAllYears] = useState<boolean>(false);
-  const [data, setData] = useState<GenreList>({} as GenreList);
 
   useEffect(() => {
    

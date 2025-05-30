@@ -4,14 +4,12 @@ import { GenreList } from "../../Types/genreTypes";
 import { openModal } from "../../store/modalSlice";
 import { useRef } from "react";
 import { Pagination } from "@mui/material";
-import { useSearchParams } from "react-router";
 
 const ContainerGenre: React.FC<{ data: GenreList; page: number; onPageChange: (page: number) => void; }> = ({ data, page, onPageChange }) => {
 
   const dispatch = useDispatch();
   const cardRef = useRef<HTMLDivElement>(null);
   const paginateRef = useRef<HTMLDivElement>(null);
-  const [params] = useSearchParams();
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     if (value === page) return;
