@@ -9,8 +9,13 @@
     }
   ],
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "jsx": "react-jsx"
+    "module": "ESNext", // sử dụng ESNext module để hỗ trợ import/export
+    "moduleResolution": "Node", // sử dụng Node module resolution để tìm kiếm module
+    "jsx": "react-jsx", // sử dụng JSX transform mới của React
+    "strict": true,  // bật chế độ strict để kiểm tra lỗi nghiêm ngặt
+    "noUnusedLocals": false, // không báo lỗi với biến không sử dụng
+    "noUnusedParameters": false, // không báo lỗi với tham số không sử dụng
+    "skipLibCheck": true,  // bỏ qua kiểm tra kiểu trong các thư viện
+    "forceConsistentCasingInFileNames": true // đảm bảo tên file nhất quán về chữ hoa chữ thường
   }
 }
