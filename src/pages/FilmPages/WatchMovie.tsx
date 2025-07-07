@@ -23,7 +23,7 @@ const WatchMovie = () => {
     const serverIndex = searchParams.get("sv"); 
     const episodePram = searchParams.get("ep"); 
 
-    console.log(srcMovie);
+    // console.log(srcMovie);
 
     const fetchMovie = async () => {
         try {
@@ -36,7 +36,7 @@ const WatchMovie = () => {
                 const server = response.episodes[Number(serverIndex)];
                 const src: ServerData | undefined = server?.server_data.find((ep: ServerData) => ep.slug.toLowerCase() === episodePram?.toLocaleLowerCase() && ep.link_m3u8);
 
-                if (src) setSrcMovie(src);
+                if (src) setSrcMovie(src);                
             }
 
         } catch (error) {
@@ -49,7 +49,7 @@ const WatchMovie = () => {
 
     useEffect(() => {
         fetchMovie();
-    }, [serverIndex, episodePram])
+    }, [serverIndex, episodePram, name])
 
 
     return (

@@ -8,6 +8,7 @@ import LandingHomePage from "../pages/LandingPage/LandingHomePage";
 import WatchMovie from "../pages/FilmPages/WatchMovie";
 import GenrePage from "../pages/GenrePages/GenrePage";
 import PageLayout from "../layouts/PageLayout";
+import DetailFilm from "../pages/FilmPages/DetailFilm";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         </Route>
         <Route path="phim" element={<MainLayout />}>
           <Route index element={<h1>Phim</h1>} />
+          <Route path=":name" element={<DetailFilm />} />
           <Route path="xem-phim/:name" element={<WatchMovie />} />
         </Route>
         <Route path="about" element={<h1>About</h1>} />

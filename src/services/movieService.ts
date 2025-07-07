@@ -32,7 +32,7 @@ const getOptionsMovies = async (params: MovieParams) => {
 
 const getMovieForGenre = async (params: GenresParams) => {
     try {
-        const {type_list, ...queryParams} = params;
+        const { type_list, ...queryParams } = params;
         const filteredParams = Object.fromEntries(
             Object.entries(queryParams).filter(([__, value]) => value !== undefined)
         );
@@ -55,6 +55,19 @@ const getMovieDetail = async (slug: string) => {
         console.log("Lấy thông tin phim thất bại", error);
         throw error;
     }
-} 
+}
 
-export { getMovies, getOptionsMovies, getMovieForGenre, getMovieDetail };
+const searchMovies = async (query: string) => {
+    try {
+        const response = await axiosInstance.get(`/v1/api/tim-kiem`, {
+            params: { keyword: query, page: 1, limit: 6 }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Lỗi khi tìm kiếm phim:', error);
+        throw error;
+    }
+}
+
+export { getMovies, getOptionsMovies, getMovieForGenre, getMovieDetail, searchMovies };

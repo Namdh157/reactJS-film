@@ -18,12 +18,12 @@ axiosInstance.interceptors.response.use(
         if (axios.isAxiosError(error)) {
             if (error.code === "ECONNABORTED" && error.message.includes("timeout"))
                 toast.error('⏳ Kết nối quá thời gian! Vui lòng thử lại.');
-            if (!hasRedirected) {
-                hasRedirected = true;
-                setTimeout(() => {
-                    window.location.href = "/error-timeout";
-                }, 1500);
-            }
+            // if (!hasRedirected) {
+            //     hasRedirected = true;
+            //     setTimeout(() => {
+            //         window.location.href = "/error-timeout";
+            //     }, 1500);
+            // }
         } else if (error.response) {
             switch (error.response.status) {
                 case 404:

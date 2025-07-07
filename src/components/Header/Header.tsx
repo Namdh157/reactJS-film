@@ -18,7 +18,6 @@ import {
   Link as MuiLink,
   Grid,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import LanguageIcon from "@mui/icons-material/Language";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
@@ -27,6 +26,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import IconButtonComponent from "../Common/IconButtonComponent";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import SearchHeader, { useDebounce } from "./SearchHeader";
+import SearchIcon from "@mui/icons-material/Search";
+import { searchMovies } from "../../services/movieService";
+import { toast } from "react-toastify";
+import { MovieItemSearch } from "../../Types/movieTypes";
+
 
 type Options = {
   url: string;
@@ -44,30 +49,6 @@ const StyleAppBar = styled(AppBar, {
   boxShadow: "none",
 }));
 
-const SearchContainer = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  backgroundColor: "rgba(255, 255, 255, 0.15)",
-  color: "#fff",
-  borderRadius: "5px",
-  width: "50%",
-  height: "35px",
-  transition: "all 500ms",
-});
-
-const StyleInputBase = styled(InputBase)({
-  width: "100%",
-  height: "100%",
-  padding: "0 15px",
-  color: "#fff",
-  transition: "all 500ms",
-  backgroundColor: "transparent",
-  borderRight: "1px solid white",
-  "&::placeholder": {
-    color: "white",
-    opacity: 1,
-  },
-});
 const options: Options[] = [
   { url: "lien-he", title: "Liên hệ" },
   { url: "gioi-thieu", title: "Giới thiệu" },
@@ -111,10 +92,36 @@ const StyleButtons = styled(Button, {
     "&:hover::after": hideBorder
       ? {}
       : {
-          width: "60%",
-        },
+        width: "60%",
+      },
   })
 );
+
+const SearchContainer = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  backgroundColor: "rgba(255, 255, 255, 0.15)",
+  color: "#fff",
+  borderRadius: "5px",
+  width: "50%",
+  height: "35px",
+  transition: "all 500ms",
+});
+const StyleInputBase = styled(InputBase, {
+  shouldForwardProp: (prop) => prop !== "classes"
+})({
+  width: "100%",
+  height: "100%",
+  padding: "0 15px",
+  color: "#fff",
+  transition: "all 500ms",
+  backgroundColor: "transparent",
+  borderRight: "1px solid white",
+  "&::placeholder": {
+    color: "white",
+    opacity: 1,
+  },
+});
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
@@ -122,6 +129,11 @@ const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const location = useLocation();
   const genres = useSelector((state: RootState) => state.genres.genres);
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500); // debounce 200ms
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<MovieItemSearch[]>([]);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -133,6 +145,28 @@ const Header: React.FC = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (!debouncedQuery.trim()) {
+          setResults([]);
+          return;
+        }
+        const res = await searchMovies(debouncedQuery);
+        setResults(res.data.items || []);
+      } catch (error) {
+        console.error("Lỗi khi tìm kiếm:", error);
+        toast.error("Lỗi khi tìm kiếm. Vui lòng thử lại sau.");
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [debouncedQuery]);
 
   const handleToggle = (value: string) => {
     setMenuOpen((prev) => (prev === value ? null : value));
@@ -151,6 +185,16 @@ const Header: React.FC = () => {
   const handleLinkClick = () => {
     setMenuOpen(null);
   };
+
+  const handleSearch = (value: string) => {
+
+    setQuery(value);
+    if (value.trim() === "") {
+      setResults([]);
+      return;
+    }
+    setMenuOpen("search");
+  }
 
   return (
     <>
@@ -211,71 +255,84 @@ const Header: React.FC = () => {
                     className=" mt-5 !text-[#8a8c8d]"
                   >
                     <ClickAwayListener onClickAway={handleClose}>
-                      <>
-                        {(() => {
-                          switch (menuOpen) {
-                            case "genres":
-                              return (
-                                <Box
-                                  sx={{
-                                    color: "#8a8c8d",
-                                    p: 3,
-                                    borderRadius: 2,
-                                    width: "33.3333%",
-                                    minWidth: 600,
-                                  }}
-                                >
-                                  <Grid container spacing={2}>
-                                    {genres.map((item, index) => (
-                                      <Grid
-                                        key={index}
-                                        item
-                                        xs={6}
-                                        sm={4}
-                                        md={3}
-                                        onClick={handleLinkClick}
+                      {(() => {
+                        switch (menuOpen) {
+                          case "genres":
+                            return (
+                              <Box
+                                sx={{
+                                  color: "#8a8c8d",
+                                  p: 3,
+                                  borderRadius: 2,
+                                  width: "33.3333%",
+                                  minWidth: 600,
+                                }}
+                              >
+                                <Grid container spacing={2}>
+                                  {genres.map((item, index) => (
+                                    <Grid
+                                      key={index}
+                                      item
+                                      xs={6}
+                                      sm={4}
+                                      md={3}
+                                      onClick={handleLinkClick}
+                                    >
+                                      <MuiLink
+                                        component={Link}
+                                        to={`/the-loai/${item.slug
+                                          .toLowerCase()
+                                          .replace(/\s+/g, "-")}`}
+                                        underline="hover"
+                                        color="inherit"
+                                        sx={{
+                                          display: "block",
+                                          fontSize: "0.95rem",
+                                          mb: 1,
+                                          whiteSpace: "nowrap",
+                                          textOverflow: "ellipsis",
+                                          overflow: "hidden",
+                                        }}
                                       >
-                                        <MuiLink
-                                          component={Link}
-                                          to={`/the-loai/${item.slug
-                                            .toLowerCase()
-                                            .replace(/\s+/g, "-")}`}
-                                          underline="hover"
-                                          color="inherit"
-                                          sx={{
-                                            display: "block",
-                                            fontSize: "0.95rem",
-                                            mb: 1,
-                                            whiteSpace: "nowrap",
-                                            textOverflow: "ellipsis",
-                                            overflow: "hidden",
-                                          }}
-                                        >
-                                          {item.name}
-                                        </MuiLink>
-                                      </Grid>
-                                    ))}
-                                  </Grid>
-                                </Box>
-                              );
-
-                            case "other":
-                              return (
-                                <MenuList>
-                                  {options.map((option) => (
-                                    <MenuItem key={option.url}>
-                                      <Link to={`/${option.url}`}>
-                                        {option.title}
-                                      </Link>
-                                    </MenuItem>
+                                        {item.name}
+                                      </MuiLink>
+                                    </Grid>
                                   ))}
-                                </MenuList>
-                              );
-                            default:
-                              return null;
-                          }
-                        })()}
-                      </>
+                                </Grid>
+                              </Box>
+                            );
+
+                          case "other":
+                            return (
+                              <MenuList>
+                                {options.map((option) => (
+                                  <MenuItem key={option.url}>
+                                    <Link to={`/${option.url}`}>
+                                      {option.title}
+                                    </Link>
+                                  </MenuItem>
+                                ))}
+                              </MenuList>
+                            );
+
+                          case 'search':
+                            return (
+                              <Box
+                                sx={{
+                                  color: "#8a8c8d",
+                                  p: 3,
+                                  borderRadius: 2,
+                                  width: "33.3333%",
+                                  minWidth: 600,
+                                }}
+                              >
+                                <SearchHeader results={results} loading={loading} handleDialog={handleLinkClick} />
+                              </Box>
+                            )
+                          default:
+                            return <></>;
+                        }
+                      })()}
                     </ClickAwayListener>
                   </Paper>
                 </Grow>
@@ -292,7 +349,12 @@ const Header: React.FC = () => {
             }}
           >
             <SearchContainer>
-              <StyleInputBase placeholder="Tìm kiếm..." />
+              <StyleInputBase
+                placeholder="Tìm kiếm..."
+                ref={anchorRef}
+                value={query}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
               <SearchIcon
                 sx={{
                   color: "white",
@@ -302,7 +364,6 @@ const Header: React.FC = () => {
                 }}
               />
             </SearchContainer>
-
             <Box sx={{ width: "43%" }} className="flex justify-between">
               {Object.values(icons).map((icon, index) => (
                 <IconButtonComponent

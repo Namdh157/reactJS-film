@@ -142,4 +142,16 @@ interface MoviesResponse {
     pagination?: object;
 }
 
-export type { MovieParams, MovieItemGenre, MovieDetail, Movie, MoviesResponse };
+interface MovieItemSearch {
+     _id: string;
+    slug: string;
+    name: string;
+    thumb_url: string;
+    origin_name: string;
+    season?: number;
+    episode?: number;
+    year: number;
+    time: number;
+}
+
+export type { MovieParams, MovieItemGenre, MovieDetail, Movie, MoviesResponse, MovieItemSearch };

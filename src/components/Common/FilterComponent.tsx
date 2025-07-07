@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useEffect, useReducer, useState } from "react";
 
-const types = [
+const type_list = [
   {
     name: "Phim Bộ",
     slug: "phim-bo",
@@ -23,7 +23,7 @@ const types = [
     slug: "phim-hoat-hinh",
   },
 ];
-const version = [
+const sort_lang = [
   {
     name: "Vietsub",
     slug: "viet-sub",
@@ -82,6 +82,7 @@ const filterReducer = (state: FilterState, action: Action): FilterState => {
       if (exists && groupValues.length === 1) {
         return state;
       }
+      console.log(state);
 
       return {
         ...state,
@@ -111,7 +112,7 @@ const FilterComponent = () => {
   const [showAllYears, setShowAllYears] = useState<boolean>(false);
 
   useEffect(() => {
-   
+
 
   }, []);
 
@@ -122,18 +123,14 @@ const FilterComponent = () => {
   const handleFilter = () => {
     const filterParams = Object.entries(filterState)
       .map(([key, values]) => {
-        if (values.length > 0) {
-          return `${key}=${values.join(",")}`;
-        }
-        return null;
+        if (values.length === 0) return null;
+        return `${key}=${values.join(",")}`;
       })
       .filter(Boolean)
       .join("&");
+
     console.log(filterParams);
 
-
-    // const url = `/tim-kiem?${filterParams}`;
-    // window.location.href = url;
   }
 
 
@@ -187,24 +184,24 @@ const FilterComponent = () => {
             <TitleFilterStyled>Loại phim:</TitleFilterStyled>
             <div className="flex flex-wrap gap-5 items-center ms-4">
               <ItemFilterStyled
-                onClick={() => dispatch({ type: "RESET_GROUP", group: "type" })}
+                onClick={() => dispatch({ type: "RESET_GROUP", group: "type_list" })}
                 sx={{
                   color: filterState.type?.length > 0 ? "" : "primary.main",
                 }}
               >
                 Tất cả
               </ItemFilterStyled>
-              {types.map((item, i) => (
+              {type_list.map((item, i) => (
                 <ItemFilterStyled
                   onClick={() =>
                     dispatch({
                       type: "TOGGLE_VALUE",
-                      group: "type",
+                      group: "type_list",
                       value: item.slug,
                     })
                   }
                   sx={{
-                    color: filterState.type?.includes(item.slug)
+                    color: filterState.type_list?.includes(item.slug)
                       ? "primary.main"
                       : "",
                   }}
@@ -222,7 +219,7 @@ const FilterComponent = () => {
             <div className="flex flex-wrap gap-5 items-center ms-4">
               <ItemFilterStyled
                 onClick={() =>
-                  dispatch({ type: "RESET_GROUP", group: "genre" })
+                  dispatch({ type: "RESET_GROUP", group: "category" })
                 }
                 sx={{
                   color: filterState.genre?.length > 0 ? "" : "primary.main",
@@ -235,12 +232,12 @@ const FilterComponent = () => {
                   onClick={() =>
                     dispatch({
                       type: "TOGGLE_VALUE",
-                      group: "genre",
+                      group: "category",
                       value: item.slug,
                     })
                   }
                   sx={{
-                    color: filterState.genre?.includes(item.slug)
+                    color: filterState.category?.includes(item.slug)
                       ? "primary.main"
                       : "",
                   }}
@@ -258,25 +255,25 @@ const FilterComponent = () => {
             <div className="flex flex-wrap gap-5 items-center ms-4">
               <ItemFilterStyled
                 onClick={() =>
-                  dispatch({ type: "RESET_GROUP", group: "version" })
+                  dispatch({ type: "RESET_GROUP", group: "sort_lang" })
                 }
                 sx={{
-                  color: filterState.version?.length > 0 ? "" : "primary.main",
+                  color: filterState.sort_lang?.length > 0 ? "" : "primary.main",
                 }}
               >
                 Tất cả
               </ItemFilterStyled>
-              {version.map((item, i) => (
+              {sort_lang.map((item, i) => (
                 <ItemFilterStyled
                   onClick={() =>
                     dispatch({
                       type: "TOGGLE_VALUE",
-                      group: "version",
+                      group: "sort_lang",
                       value: item.slug,
                     })
                   }
                   sx={{
-                    color: filterState.version?.includes(item.slug)
+                    color: filterState.sort_lang?.includes(item.slug)
                       ? "primary.main"
                       : "",
                   }}
