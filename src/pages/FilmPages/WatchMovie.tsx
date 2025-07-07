@@ -41,7 +41,7 @@ const WatchMovie = () => {
   const [muted, setMuted] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
-  const hideTimeout = useRef<NodeJS.Timeout | null>(null);
+  const hideTimeout = useRef<number | null>(null);
 
   const handleSeekMouseDown = () => setSeeking(true);
   const handleSeekMouseUp = (
@@ -82,7 +82,7 @@ const WatchMovie = () => {
   const handleShowControls = () => {
     setShowControls(true);
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
-    hideTimeout.current = setTimeout(() => {
+    hideTimeout.current = window.setTimeout(() => {
       setShowControls(false);
     }, 3000);
   };
